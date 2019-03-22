@@ -94,7 +94,7 @@ lazy val testsM   = module("tests", CrossType.Pure)
     noPublishSettings
   )
   .enablePlugins(AutomateHeaderPlugin)
-
+  .settings(scalazDerivingSettings)
 
 /** Docs - Generates and publishes the scaladoc API documents and the project web site.*/
 lazy val docs = project
@@ -137,6 +137,18 @@ lazy val docs = project
     includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.swf" | "*.yml" | "*.md")
 
 lazy val docsMappingsAPIDir = settingKey[String]("Name of subdirectory in site target directory for api docs")
+
+lazy val scalazDerivingSettings = Seq(
+  libraryDependencies ++= Seq(
+    "org.scalaz" %% "deriving-macro" % "1.0.0",
+    compilerPlugin("org.scalaz" %% "deriving-plugin" % "1.0.0")
+  ),
+  managedClasspath in Test := {
+    val res = baseDirectory.value.getParentFile / "src/test/resources"
+    val old = (managedClasspath in Test).value
+    Attributed.blank(res) +: old
+  }
+)
 
 lazy val buildSettings = sharedBuildSettings(gh, libs)
 
