@@ -26,7 +26,6 @@ import cats.tagless.laws.discipline.ContravariantKTests
 import org.scalacheck.{Arbitrary, Cogen}
 
 import scala.util.Try
-import scala.annotation.nowarn
 
 class autoContravariantKTests extends CatsTaglessTestSuite:
   import autoContravariantKTests.*
@@ -44,7 +43,7 @@ object autoContravariantKTests:
 
   object TestAlgebra:
     given [F[_]](using Arbitrary[F[Int]], Arbitrary[F[String]]): Eq[TestAlgebra[F]] = Eq.by: algebra =>
-      @nowarn val sumAll = algebra.sumAll _
+      val sumAll = algebra.sumAll()
       (algebra.sum, sumAll, algebra.foldSpecialized)
 
   given [F[_]](using
